@@ -54,13 +54,18 @@ function populateTableWithIndexedDBData() {
     .then((rawData) => {
       console.log("Raw Data from IndexedDB:", rawData); // Log the raw data
       const processedData = processScheduleData(rawData);
-      populateTable(processedData);
+
+      // Check if the table body exists before populating
+      if (document.getElementById('tableBody')) {
+        populateTable(processedData);
+      } else {
+        console.log('Table body not found, skipping population.');
+      }
     })
     .catch((error) => {
       console.error('Error loading data from IndexedDB', error);
     });
 }
-
 // Assuming populateTable function is similar to the one provided for CSV
 // You would use it here after processing data from IndexedDB
 populateTableWithIndexedDBData();
@@ -69,6 +74,11 @@ populateTableWithIndexedDBData();
 function populateTable(processedData) {
   // Get the tbody element within the table, not the table itself
   const tableBody = document.getElementById('tableBody'); // Use the correct ID for tbody
+  if (!tableBody) {
+    console.error('Table body element not found');
+    return;
+  }
+
   tableBody.innerHTML = ''; // Clear existing rows in the body, not the entire table
 
   processedData.forEach(row => {

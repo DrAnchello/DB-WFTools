@@ -60,9 +60,51 @@ $(document).ready(function () {
             });
         })
         .catch(error => console.error('Error fetching CSV:', error));
-
     // Rest of your code...
 });
+
+function createCsvTable(data) {
+    // Assuming data is an array of objects where each object represents a row in the CSV
+    const table = document.createElement('table');
+    table.className = 'csv-table';
+
+    // Create the header row
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    if (data.length > 0) {
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+    }
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create the body of the table
+    const tbody = document.createElement('tbody');
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        Object.values(row).forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    // Append the table to a container in your HTML
+    const container = document.getElementById('csvTableContainer'); // Replace with your actual container ID
+
+    // Check if the container exists
+    if (container) {
+        container.innerHTML = ''; // Clear previous content
+        container.appendChild(table);
+    } else {
+        console.error('No container found for the CSV table');
+    }
+}
 
 
 function populateSkillOwners(data) {
@@ -209,17 +251,14 @@ function updateWorkgroupsSelect() {
             return response.text();
         })
         .then(csvText => {
-            console.log("CSV file content:", csvText); // Logs the raw CSV text
 
             // Parse the CSV text
             Papa.parse(csvText, {
                 header: true, // Assumes the first row of the CSV is a header
                 complete: function (results) {
-                    console.log("Parsed CSV data:", results.data); // Logs parsed data
 
                     // Use the correct key 'Workgroup' to extract workgroup names
                     const workgroups = results.data.map(row => row.Workgroup).filter(Boolean);
-                    console.log("Workgroups extracted from CSV:", workgroups); // Logs extracted workgroups
 
                     populateSelectWithWorkgroups(workgroups);
                 }
@@ -239,12 +278,12 @@ function populateSelectWithWorkgroups(workgroups) {
     }
 
     workgroups.forEach(wg => {
-        console.log("Adding workgroup to select element:", wg); // Logs each workgroup being added
+        
         workgroupsSelect.append(new Option(wg, wg));
     });
 
     workgroupsSelect.selectpicker('refresh'); // Refresh the selectpicker
-    console.log("Select element refreshed with new options.");
+
 }
 
 // Call this function to load and initialize the workgroups select options
@@ -255,8 +294,18 @@ $(document).ready(function () {
 
 
 // Initialize Switchery
-var elem = document.querySelector('.loadSchedules');
-var init = new Switchery(elem, { color: '#343a40', size: 'small' });
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the element
+    var elem = document.querySelector('.loadSchedules');
+
+    // Check if the element exists
+    if (elem) {
+        // Only initialize Switchery if the element is found
+        var init = new Switchery(elem, { color: '#343a40', size: 'small' });
+    }
+});
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const csaLoginGroupNPT = document.getElementById('csaLoginGroupNPT');
@@ -398,4 +447,22 @@ function clearTableContent() {
 
     // Clear the contents of the tbody
     tbody.innerHTML = "";
+}
+
+document.getElementById('groupNPTbutton').addEventListener('click', function() {
+    // Step 1: Capture Form Inputs
+    let noOfLogins = document.getElementById('csaLoginGroupNPT').value.split('\n').length; // Assuming each login is on a new line
+    let duration = document.getElementById('duration').value; // This will be the slot length
+    let totalHours = calculateTotalHours(duration); // Function to calculate total hours
+
+    // Step 2: Update Table
+    document.getElementById('noOfLogins').innerText = noOfLogins;
+    document.getElementById('SlotLengthDetails').innerText = duration;
+    document.getElementById('totalHours').innerText = totalHours;
+});
+
+function calculateTotalHours(duration) {
+    // Assuming duration is in hh:mm format
+    let [hours, minutes] = duration.split(':').map(Number);
+    return hours + minutes / 60; // Converts total time to hours
 }
