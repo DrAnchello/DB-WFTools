@@ -1,0 +1,705 @@
+#main-card {
+  margin-top: 5%;
+}
+
+#schedule-generator-bulk {
+  padding: 50px;
+}
+
+table td,
+table th {
+  text-align: center;
+}
+
+#body-card-1,
+#body-card-2,
+#index-body-card {
+  margin-top: 2.5%;
+  transition: height 0.5s ease-out;
+}
+
+.navbar-text,
+.nav-item.navbar-text.mr-2 {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar {
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+#scheduleForm,
+#ShiftSwapForm,
+#GroupedNPTForm {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.multiselect.dropdown-toggle.custom-select.text-center {
+  height: auto;
+}
+.cell-red {
+  background-color: red;
+}
+#scheduleForm.active,
+#ShiftSwapForm.active,
+#GroupedNPTForm.active {
+  opacity: 1;
+  visibility: visible;
+  max-height: 1000px; /* Set a large value that you expect to be larger than the content's height */
+}
+.form-control:disabled, .form-control[readonly] {
+  background-color: #fefefe;
+}
+#includeme {
+  max-height: 100%;
+
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+#report-details-btn {
+  padding: .25rem .5rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+  font-size: x-small;
+}
+
+#includeme.active {
+  opacity: 1;
+  visibility: visible;
+  max-height: 10000px; /* Set a large value that you expect to be larger than the content's height */
+
+}
+
+/* Define CSS classes for styling */
+.highlight {
+  background-color: lightgreen;
+  color: darkgreen;
+}
+
+.blank-cell {
+  background-color: lightyellow;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000; /* or any color that matches your theme */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999 !important; /* ensures it's on top */
+}
+
+/* Optional: Add an animation to fade out the preloader */
+.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-lg {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+body {
+
+  text-align: center;
+  font-size: 12px !important;
+}
+
+.animate__animated {
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in; /* The animation will start slowly, and end at full speed */
+  animation-iteration-count: 1; /* The animation will repeat 3 times */
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.cell-green {
+  background-color: lightgreen !important;
+  color: darkgreen !important;
+}
+
+.cell-yellow {
+  background-color: lightyellow !important;
+  color: yellow !important;
+}
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+  text-align: center;
+}
+
+.modal-content {
+  margin: auto !important;
+}
+
+.table td,
+.table th {
+  padding: 0;
+  vertical-align: middle !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 16px;
+}
+
+.week-button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+h3 {
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+}
+
+#colorPickerToggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+#colorPickerMenu {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 0.9em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+/* Enhanced table hover effect */
+.dashboard-table:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s ease-in-out;
+}
+.dashboard-table thead tr {
+  background-color: #009879;
+  color: white;
+  text-align: left;
+  border-top-right-radius: 15px !important;
+}
+
+.dashboard-table th, 
+.dashboard-table td {
+  padding: 12px 15px;
+}
+
+.dashboard-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.dashboard-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.dashboard-table tbody tr:last-of-type {
+  border-bottom: 2px solid #4CAF50;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.dashboard-table tbody td.active-cell {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+@media screen and (max-width: 600px) {
+  .dashboard-table thead {
+    display: none;
+  }
+
+  .dashboard-table, 
+  .dashboard-table tbody, 
+  .dashboard-table tr, 
+  .dashboard-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .dashboard-table tr {
+    margin-bottom: 15px;
+  }
+
+  .dashboard-table td {
+    text-align: right;
+    padding-left: 50%;
+    text-align: right;
+    position: relative;
+  }
+
+  .dashboard-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Add your CSS styles here */
+.modal,
+#tableModal {
+  display: none;
+  position: fixed;
+  z-index: 9999 !important;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+
+}
+
+#csvStatusModal .modal-content {
+  max-width: fit-content;
+  max-width: -moz-fit-content;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rotated-header {
+  writing-mode: vertical-rl;
+  /* Vertical text */
+  transform: rotate(180deg);
+  /* Rotate text 90 degrees */
+  text-align: center;
+  /* Center the rotated text */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  width: 20px;
+  /* Set a fixed width for the rotated headers */
+}
+
+#DetailsModal {
+  font-size: x-small;
+}
+
+#generatedSlotsTable,
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 0px;
+}
+table.dataTable {
+  width: 100% !important;
+}
+
+.table td,
+.table th {
+  padding: 0.5px !important;
+  margin: 0.5px !important;
+}
+
+.details-button {
+  font-size: x-small !important;
+}
+
+#progress-container {
+  width: 100%;
+  height: 30px;
+  background-color: #f3f3f3;
+  margin-bottom: 20px;
+}
+
+#progress-bar {
+  width: 0;
+  height: 100%;
+  background-color: #4caf50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+
+#progress-message {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* Style the form */
+#slotGenerationForm {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 0.1px solid rgb(201 198 217 / 0%);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #e9ecef;
+}
+
+#includeme {
+  margin: 20px auto;
+  padding: 20px;
+  border: 0.1px solid rgb(201 198 217 / 0%);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #e9ecef;
+}
+
+/* Style the form controls */
+#slotGenerationForm .form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Style the form labels */
+#slotGenerationForm label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Style the form buttons */
+#slotGenerationForm .btn {
+  padding: 10px 20px;
+  background-color: #009879;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#slotGenerationForm .btn:hover {
+  background-color: #007b63;
+}
+
+/* Style the form checkboxes */
+#slotGenerationForm .form-check-input {
+  margin-right: 5px;
+}
+
+/* Navbar Styling */
+.navbar {
+  padding: 0.5rem 1rem; /* Increased padding */
+  background: rgb(2,0,36);
+  background: linear-gradient(356deg, rgba(2,0,36,1) 0%, rgba(0,152,121,1) 39%, rgba(0,212,255,1) 100%);
+}
+.nav-item.nav-link, .navbar-brand, .nav-link.multiselect.dropdown-toggle {
+  color: #fff !Important;
+}
+.navbar-brand {
+  font-weight: bold; /* Make brand text bolder */
+}
+
+.nav-item {
+  margin: 0 0.5rem; /* Space out nav items */
+}
+
+.nav-item:hover {
+/* Hover effect for nav items */
+  border-radius: 5%;
+  background-color: rgba(0, 0, 0, 0.1)
+}
+
+.nav-link {
+  padding: 0.75rem 1rem; /* Padding for nav links */
+  font-size: 1rem; /* Adjust font size */
+}
+
+/* CSV File Input Styling */
+#csvFileInput {
+  border: 1px solid #ddd; /* Border to match the form style */
+  border-radius: 0.25rem; /* Rounded corners */
+  padding: 0.375rem 0.75rem; /* Padding for the input */
+}
+#userGuideModal_Schedules {
+  max-width: fit-content
+}
+.btn {
+  padding: 10px 20px;
+  background-color: #009879;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #007b63; /* Darker shade on hover */
+}
+#scheduleSummaryTable {
+  width: fit-content !important;
+  margin: 0 auto;
+}
+
+/* Adjust the alignment of the input group */
+.input-group {
+  align-items: center; /* Align items vertically */
+}
+#generationStepsContainer {
+  max-height: 300px; /* Adjust the height as needed */
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+/* Style the modal */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 9999 !important; /* Sits on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fade-out {
+  animation: fadeOut 0.2ms forwards; /* Duration for fade out */
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+#generationPopup {
+  max-height: 90%;
+}
+
+.toast-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensures it's above most elements */
+  display: flex;
+  justify-content: center;
+}
+
+.toast {
+  min-width: 250px; /* Adjust as needed */
+}
+
+#dataTable_filter {
+  display: none;
+}
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.fab-button {
+  background-color: red;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  height: 56px;
+  outline: none;
+  width: 56px;
+}
+
+.fab-menu {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+}
+
+.fab-item {
+  align-items: center;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.fab-item label {
+  margin-left: 10px;
+}
+
+.fab-item input[type="color"] {
+  border: none;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+  color: white;
+}

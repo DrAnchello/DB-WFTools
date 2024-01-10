@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WFTools 2.1</title>
+
+  <!-- Bootstrap CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+  <!-- Switchery -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- datatables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body class="animate__animated animate__fadeIn">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <!-- Changed navbar-brand to use an image as logo -->
+      <a href="#" class="navbar-brand">
+        <img src="data/process.png" alt="WFTools Logo" height="30" />
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Removed ml-auto to align nav items to the left -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link active">
+              <span class="material-icons">home</span> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="schedule-generator.html" class="nav-link">
+              <span class="material-icons">schedule</span> Schedule Generation
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="npt-generator.html" class="nav-link">
+              <span class="material-icons">timeline</span> NPT Generation
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="report.html" class="nav-link">
+              <span class="material-icons">description</span> Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="WFTools_User_Guide.html" class="nav-link">
+              <span class="material-icons">help</span> User Guide
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <!-- This li will be aligned to the right -->
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-toggle="modal" data-target="#dataHandlingModal">
+              <span class="material-icons">storage</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Cnotent -->
+  <div class="container-fluid">
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="title">Schedule Report</h5>
+          <br />
+
+          <!-- Table Filters -->
+          <div class="container col-md-12">
+
+            <h3 class="card-title">Filters</h3>
+
+            <div class="filter-div col-md-12">
+
+              <label for="csaLoginFilter" class="form-label">CSA Logins (comma-separated):</label>
+              <textarea class="form-control" id="csaLoginFilter" rows="4"></textarea>
+
+            </div>
+
+            <br><br>
+
+            <div class="row">
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="workgroupFilter" class="form-label">Workgroup:</label>
+                  <select id="workgroupFilter" class="form-select form-select-sm" multiple aria-label="Workgroup filter"
+                    data-live-search="true" data-actions-box="true" data-selected-text-format="count">
+                    <!-- Options go here -->
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="managerFilter" class="form-label">Manager:</label>
+                <select id="managerFilter" class="form-select form-select-sm" multiple aria-label="Manager filter"
+                  data-live-search="true" data-actions-box="true" data-selected-text-format="count">
+                  <!-- Options go here -->
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label for="siteFilter" class="form-label">Site:</label>
+                <select id="siteFilter" class="form-select form-select-sm" multiple aria-label="Site filter"
+                  data-live-search="true" data-actions-box="true" data-selected-text-format="count">
+                  <!-- Options go here -->
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label for="weekSelector" class="form-label">Week:</label>
+                <!-- Filter loaded Schedules by week selection -->
+                <select class="form-select form-select-sm" id="weekSelector" multiple>
+                  <!-- Populate dynamically from csv data -->
+                </select>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Features -->
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+            <div class="btn-group" role="group" aria-label="Schedule Actions">
+              <button id="openModalBtn" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                data-bs-target="#scheduleModal">
+                Show Schedule Summary
+              </button>
+              <button type="button" id="downloadScheduleBtn" class="btn btn-secondary btn-sm">
+                Download
+              </button>
+            </div>
+          </div>
+
+          <br>
+
+          <table id="scheduleReportDatatable" class="display dashboard-table">
+            <thead>
+              <tr>
+                <th>CSA Login</th>
+                <th>Workgroup</th>
+                <th>Manager Login</th>
+                <th>Site</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Week</th>
+                <!-- Add other header columns here -->
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Table rows will be generated dynamically by your JavaScript code -->
+            </tbody>
+            <tfoot style="text-align: center;">
+              <tr>
+                <th></th> <!-- One for each column -->
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="title">Generated Site Schedules</h5>
+          <button class="btn btn-primary" id="downloadSiteSchedules" onclick="downloadTableDiv()">Download</button>
+
+          <br />
+          <!-- Somewhere in your HTML -->
+          <div id="data-table-container">
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modals -->
+  <!-- Data Handling Modal -->
+  <div class="modal fade" id="dataHandlingModal" tabindex="-1" role="dialog" aria-labelledby="dataHandlingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="dataHandlingModalLabel" style="margin: 0 auto;">Data Handling</h5>
+        </div>
+
+        <div class="modal-body">
+          <!-- CSV File Input for Uploading -->
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="csvInput" accept=".csv">
+            <label class="custom-file-label" for="csvInput">Vibe User Schedule</label>
+          </div>
+          <!-- CSV File Input for FinHC -->
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="csvInputFinHC" accept=".csv">
+            <label class="custom-file-label" for="csvInputFinHC">FinHC User Schedule</label>
+          </div>
+          <br>
+          <p id="dbSize">Calculating IndexedDB size...</p>
+
+          <button type="button" class="btn btn-primary" id="clearDataButton">Clear Data</button>
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            Generate Site Schedule
+          </button>
+          <div class="dropdown-menu">
+            <button type="button" class="dropdown-item" id="generateSiteSchedules">Generate</button>
+            <button type="button" class="dropdown-item" id="viewSiteSchedules">View</button>
+          </div>
+          <br><br>
+          <!-- Form for Downloading Data -->
+          <div class="row">
+
+            <div class="col-md-3">
+
+              <!-- Heading -->
+              <div class="">
+                <h6>Download Updated Vibe Data:</h6>
+              </div>
+
+              <!-- Form for Downloading Data -->
+              <form id="dataDownloadForm">
+
+
+                <div class="form-group">
+                  <label for="siteVibeDownload">Site:</label>
+                  <select id="siteVibeDownload" name="siteVibeDownload" class="form-select form-select-sm" multiple
+                    aria-label="siteVibeDownload">
+                    <option value="CPT">CPT</option>
+                    <option value="SAVCS">SAVCS</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="customSearch">Search Workgroups:</label>
+                  <input type="text" id="customSearch" class="form-control" placeholder="Enter workgroups separated by commas">
+              </div>
+
+              <div class="form-group" style="margin: 5px;">
+                <button type="button" id="customSelectAll" class="btn btn-primary btn-sm" style="margin: 10%;">Select
+                  All Visible</button>
+              </div>              
+
+              <div class="form-group">
+                  <label for="workgroupsVibeDownload">Workgroups:</label>
+                  <select id="workgroupsVibeDownload" class="form-select form-select-sm" multiple
+                      aria-label="Workgroup filter" data-actions-box="true"
+                      data-selected-text-format="count">
+                      <!-- Options will be populated here -->
+                  </select>
+              </div>
+              
+
+                <!-- Select Input for Timezone -->
+                <div class="form-group">
+                  <label for="timezone">Timezone:</label>
+                  <select id="timezone" name="timezone" class="form-control">
+                    <option>Africa/Johannesburg</option>
+                    <option>America/Los_Angeles</option>
+                    <option>ETC</option>
+                  </select>
+                </div>
+
+                <!-- Select Input for Date Format -->
+                <div class="form-group">
+                  <label for="daterange">Date Range:</label>
+                  <input type="text" id="daterange" name="daterange" class="form-control">
+                </div>
+
+                <div class="container-fluid">
+                  <button type="button" class="btn btn-primary" onclick="generateLink()"
+                    style="margin: 0 auto !important;">Download Report</button>
+                </div>
+
+              </form>
+
+            </div>
+
+            <div class="col-md-9">
+              <!-- Heading -->
+              <div class="">
+                <h6>Space Ownership:</h6>
+              </div>
+
+              <table id="csvOwnerTable" class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>
+                            WG
+                            <br>
+                            <input type="text" id="filterWG" placeholder="Filter">
+                            <button onclick="copyColumnData(0)">Copy</button>
+                        </th>
+                        <th>
+                            OU
+                            <br>
+                            <input type="text" id="filterOU" placeholder="Filter">
+                            <button onclick="copyColumnData(1)">Copy</button>
+                        </th>
+                        <th>
+                            Skill Owner: CPT
+                            <br>
+                            <input type="text" id="filterCPT" placeholder="Filter">
+                            <button onclick="copyColumnData(2)">Copy</button>
+                        </th>
+                        <th>
+                            Skill Owner: SAVCS
+                            <br>
+                            <input type="text" id="filterSAVCS" placeholder="Filter">
+                            <button onclick="copyColumnData(3)">Copy</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows populated from CSV data -->
+                </tbody>
+            </table>
+            
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Loaded Modal -->
+  <div class="data-load-toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="mr-auto">Data Load</strong>
+        <small>just now</small>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="toast-body">
+        Data has been loaded successfully.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Progress Modal -->
+  <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="progressModalLabel">Progress</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Loading data...
+          <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Section -->
+
+  <!-- CDNs-->
+
+  <!-- Jquery -->
+  <!-- Remove the 'slim' version if it's already included, and replace it with this -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+  <!-- Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Switchery JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+  <!-- Papa parse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <!-- Moment JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <!-- IDB Library -->
+  <script src="https://cdn.jsdelivr.net/npm/idb@8/build/umd.js"></script>
+  <!-- Datatable -->
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+
+  <!-- Custom JS -->
+
+  <!-- CSV Processing -->
+  <script type="module" src="js/dataProcessing.js"></script>
+
+  <!-- DB Operation -->
+  <script type="module" src="js/dbOperations.js"></script>
+  <script src="js/data-handling-FinHC.js"></script>
+
+  <!-- Site Schedule Logic -->
+  <script src="js/generateSiteSchedules.js"></script>
+  <script src="js/downloadSiteSchedule.js"></script>
+
+  <!-- Report JS Functions -->
+  <script src="js/report.js"></script>
+
+  <!-- Form Handlers -->
+  <script src="js/formHandlers.js"></script>
+  <script src="js/vibe-report-download.js"></script>
+
+
+</body>
+
+</html>

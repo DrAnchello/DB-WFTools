@@ -1,0 +1,127 @@
+{
+    "NA CONSUMER CPT": {
+      "SKILL OWNER": {
+        "US Account Change Retail Blend": "Zaiyaan",
+        "HBS_US_EN_CA_HeavyBulky_Services_Phone": "Zaiyaan",
+        "DART_CC_English_Supervisor": "Zaiyaan",
+        "Eco_retail_p2_TBR_phone": "Zaiyaan",
+        "HBS_US_EN_ProductSupport": "Zaiyaan",
+        "Dart_CC": "Zaiyaan"
+      }
+    },
+    "NA CONSUMER SAVCS": {
+      "SKILL OWNER": {
+        "Amazon-Business-Generalist-Phone+CASE": "Rebeca",
+        "Amazon-Business-Generalist-PNQ10-MU-LISA+CASE": "Rebeca",
+        "Amazon Business Enterprise_w/o Tax": "Rebeca",
+        "Amazon-Business-Enterprise-Email-Only": "Rebeca",
+        "Caracara": "Hayden",
+        "Retail": "Hayden",
+        "DART_CC": "Hayden",
+        "US_Back_Office_Specialist": "Hayden",
+        "Prime_Wardrobe": "Hayden",
+        "L2_SearchAndRescue_Phone": "Hayden",
+        "HeavyBulky_Services": "Paula",
+        "US_AHS_Escalations": "Paula",
+        "Phishing_And_Fraud": "Paula",
+        "Price_Change_Phones": "Paula",
+        "Registry": "Paula"
+      }
+    },
+    "UK CONSUMER CPT": {
+      "SKILL OWNER": {
+        "AMZ_UK_PRIME_PM": "John / Chelsea",
+        "AMZ_UK_AC_CE_P": "John / Chelsea",
+        "UK Message Us": "John / Chelsea",
+        "Uk Retail M": "John / Chelsea",
+        "Caracara_UK_Phone_MU": "John / Chelsea"
+      }
+    },
+    "UK CONSUMER SAVCS": {
+      "SKILL OWNER": {
+        "AMZ_UK_B2B_PM_RETAIL": "Rebeca",
+        "Caracara_UK_Phone_MU": "Meu",
+        "AMZ_UK_HBS_P_M": "Meu",
+        "UK Message Us": "Meu",
+        "Uk Retail M": "Meu",
+        "UK Retail M 2": "Meu"
+      }
+    },
+    "DE CONSUMER CPT": {
+      "SKILL OWNER": {
+        "DE EngTier2 (C/P/E)": "Rebeca",
+        "DE EngTier1 (C/P/E)": "Rebeca"
+      }
+    },
+    "DE CONSUMER SAVCS": {
+      "SKILL OWNER": {
+        "DE B2B ENG CPT (M/P/E)": "Rebeca",
+        "DE B2B Enterprise ENG CPT (M/P/E)": "Rebeca",
+        "DE B2B Enterprise (M/P/E)": "Rebeca",
+        "DE B2B (M/P/E)": "Rebeca",
+        "DE_B2B_ENG_BUWG": "Rebeca",
+        "DE EngTier1 (C/P/E)": "Rebeca",
+        "DE EngTier2 (C/P/E)": "Rebeca",
+        "DE DART CPT": "Rebeca"
+      }
+    },
+    "D2 NA CPT": {
+      "SKILL OWNER": {
+        "CPT_CAP_Kindle": "Dylan",
+        "D2AS_EN_CAP_EW_Non_Voice": "Dylan",
+        "D2AS_EN_Generalist_Blended": "Dylan"
+      }
+    },
+    "D2 NA SAVCS": {
+      "SKILL OWNER": {
+        "D2AS_EN_P2P_Blended": "Taariq",
+        "D2AS_EN_Generalist_MU": "Taariq",
+        "D2AS_EN_Generalist_Blended": "Taariq",
+        "D2AS_EN_Devices_Echo_Music_Blended": "Taariq",
+        "DigiQ": "Taariq"
+      }
+    },
+    "D2 UK CPT": {
+      "SKILL OWNER": {
+        "AMZ_UK_CPT_D2_AT_P_C_E": "Dylan",
+        "AMZ_UK_HYD_D2_T1_P": "Dylan",
+        "UK_DE_D2_Blended_P_C": "Dylan",
+        "AMZ_UK_D2_Blended_P_MU_E_CAP": "Dylan"
+      }
+    },
+    "D2 UK SAVCS": {
+      "SKILL OWNER": {
+        "AMZ_UK_HYD_D2_T1_P": "Taariq",
+        "AMZ_UK_D2_T1_C_cross_skill": "Taariq",
+        "Cardinal_UK_Incubation": "Taariq",
+        "UK_DE_D2_Blended_P_C": "Taariq",
+        "AMZ_UK_D2_Blended_P_MU_E_CAP": "Taariq",
+        "AMZ_UK_AIV_Chat_MU": "Taariq"
+      }
+    },
+    "D2 DE CPT": {
+      "SKILL OWNER": {
+        "DE_D2_Group2Eng_(M/P/E)": "Zade"
+      }
+    },
+    "D2 DE SAVCS": {
+      "SKILL OWNER": {
+        "DE_D2_Group2Eng_(M/P/E)": "Zade",
+        "DE D2 Group3 (M/P/E)": "Zade",
+        "DE DART D2": "Zade"
+      }
+    },
+    "SDS NA SAVCS": {
+      "SKILL OWNER": {
+        "SDS-NA-GSF3-PilotB": "Zade",
+        "SDS-NA-GSF3_Falcon": "Zade"
+      }
+    },
+    "SDS UK SAVCS": {
+      "SKILL OWNER": {
+        "SDS-UK-Recipient+Driver-Phone": "Zade",
+        "SDS-UK-Recipient+Driver+F3-PCME": "Zade"
+      }
+    }
+  }
+  

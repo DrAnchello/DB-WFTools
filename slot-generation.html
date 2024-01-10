@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <!-- Flatpickr css -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/animations.css" rel="stylesheet">
+  <style>
+    .flatpickr-day.not-loaded {
+      background: #ffcccb;
+      /* light red, for example */
+    }
+
+  </style>
+  <title>WorkFlow Tools 0.1a</title>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <a class="navbar-brand" href="index.html">WorkFlow Tools 0.1a</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="index.html">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="schedule-generator.html">Schedule Generation</a>
+        <a class="nav-item nav-link" href="npt-generator.html">NPT Generation</a>
+        <a class="nav-item nav-link" href="report.html">Reports</a>
+        <a class="nav-item nav-link" href="WFTools_User_Guide.html">User Guide</a>
+      </div>
+    </div>
+
+    <!-- Adding the file input to the right -->
+    <div class="navbar-nav ml-auto">
+      <label for="csvFileInput">Choose a CSV file:</label>
+      <input type="file" id="csvFileInput" accept=".csv" class="form-control">
+    </div>
+
+  </nav>
+
+  <!-- Toast Div -->
+
+  <div class="toast" id="scheduleToast" style="position: fixed; top: 20px; right: 20px;" data-bs-delay="3000">
+    <div class="toast-header">
+      <strong class="mr-auto">Schedule Loaded</strong>
+      <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      The schedule has been successfully loaded.
+    </div>
+  </div>
+
+  <div class="toast" id="failureToast" style="position: fixed; top: 20px; right: 20px;" data-bs-delay="3000">
+    <div class="toast-header">
+      <strong class="mr-auto text-danger">Schedule Load Failed</strong>
+      <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      Unable to load the schedule. Please try again.
+    </div>
+  </div>
+
+  <!-- Generation loading modal -->
+  <div id="generationPopup"
+    style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid #ddd; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+    <h3>Generating Slots...</h3>
+    <!-- Container to center element-->
+    <div class="col-md-12">
+      <div class="load-wrap col-md-12">
+        <div class="load-10 col-md-12">
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div id="generationStepsContainer" style="max-height: 300px; overflow-y: auto;">
+      <div id="generationSteps"></div>
+      <div id="popupButtons" style="display: none;">
+        <button type="button" id="showFailedLogins">Show Failed Logins</button>
+        <button type="button" id="viewSlotsHeatmap">View Slots Heatmap</button>
+        <button type="button" id="recalculateSlots">Recalculate</button>
+      </div>
+      <button id="closePopup">Close</button>
+    </div>
+  </div>
+
+  <!-- Failed Logins Modal -->
+  <div class="modal fade" id="failedLoginsModal" tabindex="-1" role="dialog" aria-labelledby="failedLoginsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="failedLoginsModalLabel">Failed Logins</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body" id="failedLoginsModalBody">
+          <ul id="failedLoginsList"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Input Results Status -->
+  <div id="csvStatusModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalMessage">Some text in the Modal..</p>
+    </div>
+  </div>
+
+  <!-- Loading Bar Modal -->
+  <div id="loadingModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Processing...</h5>
+        </div>
+        <div class="modal-body">
+          <div id="loadingBar" class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"
+              aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            </div>
+          </div>
+          <!-- Console Log Output -->
+          <div id="consoleLog"
+            style="max-height: 300px; overflow-y: auto; margin-top: 20px; background-color: #f8f9fa; padding: 10px;">
+            <!-- Console messages will be appended here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal structure -->
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" aria-labelledby="tableModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tableModalLabel">Schedule Table</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <table id="loadedSchedules" class="table">
+            <thead>
+              <tr>
+                <th>CSA Login</th>
+                <th>Workgroup</th>
+                <th>Manager Login</th>
+                <th>Type</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Comment</th>
+                <th>Uploader</th>
+                <th>Upload date</th>
+                <th>Site</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Rows will be populated dynamically -->
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slot Generation Form -->
+
+  <div class="container-fluid">
+
+    <div class="card" id="body-card-1">
+      <div class="card-body row">
+
+        <div class="row">
+
+          <div class="col-md-3">
+
+            <form id="slotGenerationForm" action="javascript:void(0);">
+              <br>
+              <h3>Slot Generation Form</h3>
+              <br>
+              <div class="form-group">
+                <label for="login">Logins</label>
+                <textarea id="login" class="form-control" placeholder="Enter logins separated by commas"></textarea>
+              </div>
+              <br>
+              <p>Logins count: <span id="loginsCount">0</span></p>
+              <div class="form-group">
+                <label for="slotType">Slot Type</label>
+                <select id="slotType" class="form-control">
+                  <option value="Project Work">Project Work</option>
+                  <option value="Training">Training</option>
+                  <option value="1-on-1">1-on-1</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="slotLength">Slot Length (minutes)</label>
+                <input type="number" id="slotLength" class="form-control" placeholder="Enter slot length in minutes">
+              </div>
+              <div class="form-group">
+                <label for="slotOffset">Slot offset (minutes)</label>
+                <input type="number" id="slotOffset" class="form-control" placeholder="Offset from shift start">
+              </div>
+              <div class="form-group">
+                <label for="slotName">Slot Name</label>
+                <input type="text" id="slotName" class="form-control" placeholder="Enter slot name">
+              </div>
+              <br><br>
+              <div class="form-group">
+                <label for="managerSelect">Manager</label>
+                <select id="managerSelect" class="form-control" multiple>
+                  <option value="all">All</option>
+                  <!-- Other options will be added dynamically -->
+                </select>
+              </div>
+              <br><br>
+              <div class="form-group">
+                <label for="workgroupSelect">Workgroup</label>
+                <select id="workgroupSelect" class="form-control" multiple>
+                  <option value="all">All</option>
+                  <!-- Other options will be added dynamically -->
+                </select>
+              </div>
+              <br><br>
+              <div class="form-group">
+                <label for="siteSelect">Site</label>
+                <select id="siteSelect" class="form-control" multiple></select>
+              </div>
+              <br><br>
+              <div class="form-group">
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" id="limitTimes" class="form-check-input">
+                  <label for="limitTimes" class="form-check-label">Limit Times</label>
+                </div>
+
+                <!-- Additional fields to specify the time range, disabled by default -->
+                <div class="input-group input-group-inline" style="display: none;" id="timeRangeGroup">
+                  <input type="time" id="startTime" class="form-control" disabled>
+                  <input type="time" id="endTime" class="form-control" disabled>
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" id="excludeWeekends" class="form-check-input">
+                  <label for="excludeWeekends" class="form-check-label">Exclude Weekends</label>
+                </div>
+              </div>
+              <br>
+              <div class="form-group">
+                <label for="excludeDates">Exclude Specific Dates</label>
+                <input type="text" id="excludeDates" class="form-control" placeholder="Select dates to exclude">
+              </div>
+              <br>
+              <div class="form-group">
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" id="avoidLunch" class="form-check-input">
+                  <label for="avoidLunch" class="form-check-label">Avoid Lunch</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" id="avoidBreaks" class="form-check-input">
+                  <label for="avoidBreaks" class="form-check-label">Avoid Breaks</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input type="checkbox" id="avoidNonWorkNPT" class="form-check-input">
+                  <label for="avoidNonWorkNPT" class="form-check-label">Avoid Non-Work NPT (e.g., Meeting, Project
+                    Work)</label>
+                </div>
+              </div>
+              <br>
+              <div class="form-group">
+                <div class="container">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-primary" id="generateSlots">Generate Slots</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#" id="download-slots">Download</a></li>
+                      <li><a class="dropdown-item" href="#" id="refresh-slots">Refresh</a></li>
+                      <li><a class="dropdown-item" href="#" id="showTableBtn">Show Table</a></li>
+                      <li><a class="dropdown-item" href="reports.html" id="another-page-link">Report Viewer</a></li>
+                      <li><a class="dropdown-item" href="#" id="failedLoginsBtn">Failed Logins</a></li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+
+          <div class="col-md-9">
+
+            <div id="includeme">
+              <h3>Generated Slots</h3>
+              <br>
+              <table class="dashboard-table" id="generatedSlotsTable">
+                <thead>
+                  <tr>
+                    <th>Login</th>
+                    <th>Workgroup</th>
+                    <th>Slot Type</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table rows will be dynamically inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="card" id="body-card-2">
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+
+
+  <div class="modal fade" id="failedLoginsModal" tabindex="-1" role="dialog" aria-labelledby="failedLoginsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="failedLoginsModalLabel">Failed Logins</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="failedLoginsModalBody">
+          <!-- Failed logins will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+  <!-- Flatpickr js cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Custom JS -->
+  <script type="module" src="js/dbOperations.js"></script>
+  <script src="js/slot-generation.js" defer=""></script>
+  <script src="js/floating-btn-controls-slots.js" defer=""></script>
+
+
+  <script>
+    // Add event listeners for the menu options
+    document.getElementById("download-slots").addEventListener("click", function () {
+      console.log("Download clicked");
+      downloadSlots();
+    });
+
+    document.getElementById("refresh-slots").addEventListener("click", function () {
+      console.log("Refresh clicked");
+      // Clear the table
+      clearTable();
+    });
+
+    function clearTable() {
+      // Clear the table body
+      const tableBody = document.querySelector("#generatedSlotsTable tbody");
+      tableBody.innerHTML = "";
+    }
+
+    function formatTime(date) {
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    }
+
+    function formatDate(date) {
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
+
+    function downloadSlots() {
+      const rows = document.querySelectorAll("#generatedSlotsTable tbody tr");
+      let csvContent = "data:text/csv;charset=utf-8,";
+      let weekNumbers = [];
+
+      // Add the header row to the CSV file
+      csvContent += "login,owner_name/company_name,workgroup,shift_interval,start_date_time,end_date_time,is_delete,comment,interval_status\n";
+
+      // Function to get week number from date
+      function getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        return weekNo;
+      }
+
+      // Add the data rows to the CSV file and collect week numbers
+      rows.forEach(row => {
+        const login = row.cells[0].textContent;
+        const workgroup = row.cells[1].textContent;
+        const slotType = row.cells[2].textContent;
+        const slotStart = row.cells[3].textContent;
+        const slotEnd = row.cells[4].textContent;
+        const slotName = row.cells[6].textContent;
+
+        // Assuming the slot length is correctly calculated and formatted in row.cells[6]
+        const startDateTime = new Date(slotStart);
+        const endDateTime = new Date(slotEnd);
+
+        let rowData = [
+          login, // Login
+          "Amazon", // owner_name/company_name
+          workgroup, // Workgroup
+          slotType, // shift_interval
+          formatDate(startDateTime) + " " + formatTime(startDateTime), // start_date_time
+          formatDate(endDateTime) + " " + formatTime(endDateTime), // end_date_time
+          "n", // is_delete
+          slotName, // comment
+          "Approved" // interval_status
+        ];
+
+        csvContent += rowData.join(",") + "\r\n";
+
+        // Collect week numbers
+        weekNumbers.push(getWeekNumber(startDateTime));
+      });
+
+      // Get the unique week numbers
+      weekNumbers = [...new Set(weekNumbers)].sort();
+
+      const slotName = document.getElementById('slotName').value.replace(/\s+/g, '_'); // Replace spaces with underscores
+      const currentDateStamp = formatDate(new Date()).replace(/\//g, '-'); // Use current date with hyphens
+      const weekNumberRange = weekNumbers.length > 1 ? `${weekNumbers[0]}-${weekNumbers[weekNumbers.length - 1]}` : weekNumbers[0];
+      const fileName = `${slotName}_${currentDateStamp}_week${weekNumberRange}.csv`;
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+    }
+
+  </script>
+
+</body>
+
+</html>
