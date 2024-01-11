@@ -1,7 +1,7 @@
 {
 "name": "WFTools 2.1b",
 "short_name": "WFTools 2.1b",
-"start_url": "The URL that should be loaded when your application is opened",
+"start_url": "/index.html",
 "display": "standalone",
 "description": "A description for your application",
 "lang": " The default language of your application",

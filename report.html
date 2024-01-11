@@ -254,7 +254,7 @@
             <label class="custom-file-label" for="csvInputFinHC">FinHC User Schedule</label>
           </div>
           <br>
-          <p id="dbSize">Calculating IndexedDB size...</p>
+          <p id="dbSize"></p>
 
           <button type="button" class="btn btn-primary" id="clearDataButton">Clear Data</button>
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -290,23 +290,23 @@
 
                 <div class="form-group">
                   <label for="customSearch">Search Workgroups:</label>
-                  <input type="text" id="customSearch" class="form-control" placeholder="Enter workgroups separated by commas">
-              </div>
+                  <input type="text" id="customSearch" class="form-control"
+                    placeholder="Enter workgroups separated by commas">
+                </div>
 
-              <div class="form-group" style="margin: 5px;">
-                <button type="button" id="customSelectAll" class="btn btn-primary btn-sm" style="margin: 10%;">Select
-                  All Visible</button>
-              </div>              
+                <div class="form-group" style="margin: 5px;">
+                  <button type="button" id="customSelectAll" class="btn btn-primary btn-sm" style="margin: 10%;">Select
+                    All Visible</button>
+                </div>
 
-              <div class="form-group">
+                <div class="form-group">
                   <label for="workgroupsVibeDownload">Workgroups:</label>
                   <select id="workgroupsVibeDownload" class="form-select form-select-sm" multiple
-                      aria-label="Workgroup filter" data-actions-box="true"
-                      data-selected-text-format="count">
-                      <!-- Options will be populated here -->
+                    aria-label="Workgroup filter" data-actions-box="true" data-selected-text-format="count">
+                    <!-- Options will be populated here -->
                   </select>
-              </div>
-              
+                </div>
+
 
                 <!-- Select Input for Timezone -->
                 <div class="form-group">
@@ -341,38 +341,38 @@
 
               <table id="csvOwnerTable" class="dashboard-table">
                 <thead>
-                    <tr>
-                        <th>
-                            WG
-                            <br>
-                            <input type="text" id="filterWG" placeholder="Filter">
-                            <button onclick="copyColumnData(0)">Copy</button>
-                        </th>
-                        <th>
-                            OU
-                            <br>
-                            <input type="text" id="filterOU" placeholder="Filter">
-                            <button onclick="copyColumnData(1)">Copy</button>
-                        </th>
-                        <th>
-                            Skill Owner: CPT
-                            <br>
-                            <input type="text" id="filterCPT" placeholder="Filter">
-                            <button onclick="copyColumnData(2)">Copy</button>
-                        </th>
-                        <th>
-                            Skill Owner: SAVCS
-                            <br>
-                            <input type="text" id="filterSAVCS" placeholder="Filter">
-                            <button onclick="copyColumnData(3)">Copy</button>
-                        </th>
-                    </tr>
+                  <tr>
+                    <th>
+                      WG
+                      <br>
+                      <input type="text" id="filterWG" placeholder="Filter">
+                      <button onclick="copyColumnData(0)">Copy</button>
+                    </th>
+                    <th>
+                      OU
+                      <br>
+                      <input type="text" id="filterOU" placeholder="Filter">
+                      <button onclick="copyColumnData(1)">Copy</button>
+                    </th>
+                    <th>
+                      Skill Owner: CPT
+                      <br>
+                      <input type="text" id="filterCPT" placeholder="Filter">
+                      <button onclick="copyColumnData(2)">Copy</button>
+                    </th>
+                    <th>
+                      Skill Owner: SAVCS
+                      <br>
+                      <input type="text" id="filterSAVCS" placeholder="Filter">
+                      <button onclick="copyColumnData(3)">Copy</button>
+                    </th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <!-- Table rows populated from CSV data -->
+                  <!-- Table rows populated from CSV data -->
                 </tbody>
-            </table>
-            
+              </table>
+
 
             </div>
 

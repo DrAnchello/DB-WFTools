@@ -2,7 +2,7 @@
 
 // Generate the report link
 function generateLink() {
-  var site = encodeURIComponent(document.getElementById("siteVibeDownload").value);
+  var sitesSelect = document.getElementById("siteVibeDownload");
   var timezone = encodeURIComponent(document.getElementById("timezone").value);
   var workgroupsSelect = document.getElementById("workgroupsVibeDownload");
   var dateRange = document.getElementById("daterange").value;
@@ -10,9 +10,14 @@ function generateLink() {
   var startDate = encodeURIComponent(dates[0]);
   var endDate = encodeURIComponent(dates[1]);
 
+  // Get selected sites and format them for the URL
+  var selectedSites = Array.from(sitesSelect.selectedOptions)
+    .map(option => "sites=" + encodeURIComponent(option.value))
+    .join("&");
+
   // Existing selected workgroups
   var selectedWorkgroups = Array.from(workgroupsSelect.selectedOptions)
-    .map((option) => "workGroups=" + encodeURIComponent(option.value))
+    .map(option => "workGroups=" + encodeURIComponent(option.value))
     .join("&");
 
   // Static workgroups to be always included
@@ -21,26 +26,25 @@ function generateLink() {
     "Support/Non-Production",
     "Temp Holding Workgroup",
   ]
-    .map((wg) => "workGroups=" + encodeURIComponent(wg))
+    .map(wg => "workGroups=" + encodeURIComponent(wg))
     .join("&");
 
-  // If there are selected workgroups, add an '&' before appending static workgroups
-  if (selectedWorkgroups.length > 0) {
-    selectedWorkgroups += "&" + staticWorkgroups;
-  } else {
-    selectedWorkgroups = staticWorkgroups;
-  }
+  // Combine selected and static workgroups
+  var combinedWorkgroups = selectedWorkgroups
+    ? selectedWorkgroups + "&" + staticWorkgroups
+    : staticWorkgroups;
 
   var baseLink =
-    "https://vibe.a2z.com/reportsandanalytics/reports?reportType=User%20Schedules&sites=";
+    "https://vibe.a2z.com/reportsandanalytics/reports?reportType=User%20Schedules&";
+
   var staticText =
     "&cssmUsername=&scheduleIntervalTypeNames=Break&scheduleIntervalTypeNames=Lunch&scheduleIntervalTypeNames=Non-Productive%20Time&scheduleIntervalTypeNames=Overtime&scheduleIntervalTypeNames=Peer%20Swap-in&scheduleIntervalTypeNames=Peer%20Swap-out&scheduleIntervalTypeNames=Time-off&scheduleIntervalTypeNames=Planned%20Time-off&scheduleIntervalTypeNames=Voluntary%20Time-off&scheduleIntervalTypeNames=Work&scheduleIntervalStatusNames=Approved&scheduleIntervalStatusNames=Mandatory";
 
   var downloadLink =
     baseLink +
-    site +
+    selectedSites +
     "&" +
-    selectedWorkgroups +
+    combinedWorkgroups +
     "&startDate=" +
     startDate +
     "&endDate=" +
@@ -57,11 +61,12 @@ function generateLink() {
 
 // Vibe Report Download Range
 document.addEventListener("DOMContentLoaded", function () {
-  flatpickr("#daterange", {
-    mode: "range",
-    dateFormat: "Y-m-d",
+    flatpickr("#daterange", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      weekNumbers: true
+    });
   });
-});
 
 // Day selector initialization
 document.addEventListener("DOMContentLoaded", function () {

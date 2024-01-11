@@ -11,9 +11,11 @@ export function setupIndexedDB() {
     request.onupgradeneeded = function (event) {
         const db = event.target.result;
         if (!db.objectStoreNames.contains("schedules")) {
-            db.createObjectStore("schedules", { keyPath: "id", autoIncrement: true });
+            const objectStore = db.createObjectStore("schedules", { keyPath: "id", autoIncrement: true });
+
+            // Update here: Create an index for 'CSA Login'
+            objectStore.createIndex("csaIndex", "CSA Login", { unique: false }); // Ensure this matches your data structure
         }
-        // Define other indexes as required
     };
 }
 
@@ -27,13 +29,23 @@ export function storeDataInIndexedDB(data) {
         const objectStore = transaction.objectStore("schedules");
 
         data.forEach((rowData) => {
-            objectStore.add(rowData);
+            if (rowData['CSA Login'] !== undefined) {
+                const checkRequest = objectStore.index('csaIndex').get(rowData['CSA Login']);
+
+                checkRequest.onsuccess = function (e) {
+                    const matchingRecord = e.target.result;
+                    if (matchingRecord) {
+                        alertDuplicateData(() => clearScheduleStore(db));
+                    } else {
+                        objectStore.add(rowData);
+                    }
+                };
+            }
         });
 
         transaction.oncomplete = function () {
             console.log("Data stored in IndexedDB");
-            console.log(data);
-            // reload page
+            // Reload the page after successful data addition
             window.location.reload();
         };
 
@@ -47,28 +59,83 @@ export function storeDataInIndexedDB(data) {
     };
 }
 
+function alertDuplicateData(callback) {
+    const userResponse = confirm("Duplicate data week for CSAs has been found and not overwritten. Do you want to clear the schedule store?");
+    if (userResponse) {
+        callback();
+    }
+}
+
+function clearScheduleStore(db) {
+    const transaction = db.transaction(["schedules"], "readwrite");
+    const objectStore = transaction.objectStore("schedules");
+    const clearRequest = objectStore.clear();
+
+    clearRequest.onsuccess = function() {
+        alert("Schedule store cleared.");
+        // Consider reloading the page here as well if needed
+    };
+}
+
 // Load stored DB info on page load
 window.onload = function () {
-    var request = window.indexedDB.open("VibeScheduleDB", 2);
+    const request = window.indexedDB.open("VibeScheduleDB", 2);
 
     request.onerror = function (event) {
         console.error("Database error: " + event.target.errorCode);
     };
 
     request.onsuccess = function (event) {
-        var db = event.target.result;
-        var transaction = db.transaction("schedules", "readonly");
-        var objectStore = transaction.objectStore("schedules");
-        var cursorRequest = objectStore.openCursor();
+        let dbSize = 0;
+        const db = event.target.result;
+        const transaction = db.transaction("schedules", "readonly");
+        const objectStore = transaction.objectStore("schedules");
+        const cursorRequest = objectStore.openCursor();
 
         cursorRequest.onsuccess = function (e) {
-            var cursor = e.target.result;
+            const cursor = e.target.result;
             if (cursor) {
-                // Log the current row's data
-                cursor.value;
+                // Calculate the size of this row
+                const json = JSON.stringify(cursor.value);
+                const size = new TextEncoder().encode(json).length;
+                dbSize += size; // Add to the total size
                 cursor.continue();
             } else {
-                console.log("No more entries!");
+                // No more entries, update the size display
+                const dbSizeInMB = (dbSize / 1024 / 1024).toFixed(2); // Convert bytes to MB
+                document.getElementById("dbSize").textContent = `Total DB size: ${dbSizeInMB} MB`;
+            }
+        };
+    };
+};
+
+// Function to clear a specific database and object store
+const clearDatabase = (dbName, storeName, callback) => {
+    const request = indexedDB.open(dbName);
+
+    request.onerror = (event) => {
+        console.error(`IndexedDB error on ${dbName}:`, event.target.error);
+    };
+
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        const transaction = db.transaction([storeName], "readwrite");
+        const objectStore = transaction.objectStore(storeName);
+
+        const clearRequest = objectStore.clear();
+
+        clearRequest.onsuccess = () => {
+            console.log(`The object store ${storeName} in ${dbName} has been cleared`);
+        };
+
+        clearRequest.onerror = (event) => {
+            console.error(`Error clearing the object store ${storeName} in ${dbName}:`, event.target.error);
+        };
+
+        transaction.oncomplete = () => {
+            db.close();
+            if (typeof callback === 'function') {
+                callback();
             }
         };
     };
@@ -79,40 +146,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearDataButton = document.getElementById('clearDataButton');
 
     clearDataButton.addEventListener('click', () => {
-        // Function to clear a specific database and object store
-        const clearDatabase = (dbName, storeName) => {
-            const request = indexedDB.open(dbName);
-
-            request.onerror = (event) => {
-                console.error(`IndexedDB error on ${dbName}:`, event.target.error);
-            };
-
-            request.onsuccess = (event) => {
-                const db = event.target.result;
-                const transaction = db.transaction([storeName], "readwrite");
-                const objectStore = transaction.objectStore(storeName);
-
-                const clearRequest = objectStore.clear();
-
-                clearRequest.onsuccess = () => {
-                    console.log(`The object store ${storeName} in ${dbName} has been cleared`);
-                };
-
-                clearRequest.onerror = (event) => {
-                    console.error(`Error clearing the object store ${storeName} in ${dbName}:`, event.target.error);
-                };
-
-                transaction.oncomplete = () => {
-                    db.close();
-                };
-            };
-        };
-
         // Clear VibeScheduleDB
-        clearDatabase("VibeScheduleDB", "schedules");
-
-        // Clear FinHCDatabase
-        clearDatabase("FinHCDatabase", "FinHCObjectStore");
+        clearDatabase("VibeScheduleDB", "schedules", () => {
+            // Clear FinHCDatabase
+            clearDatabase("FinHCDatabase", "FinHCObjectStore", () => {
+                // Reload the page after both databases are cleared
+                window.location.reload();
+            });
+        });
     });
 });
 

@@ -1,6 +1,23 @@
 $(document).ready(function () {
     // Initialize existing selectpickers
-    $('.form-select, #workgroupFilter, #managerFilter, #siteFilter, #weekSelector, #scheduleFormSiteSelection, #scheduleFormWeekSelector').selectpicker();
+    $('.form-select, #managerFilter, #siteFilter, #scheduleFormSiteSelection, #scheduleFormWeekSelector').selectpicker();
+
+    var select = $('#workgroupFilter');
+
+    // Detach the options, sort them, and re-attach them
+    var sortedOptions = select.find('option').detach().sort(function(a, b) {
+        var aText = $(a).text().toUpperCase();
+        var bText = $(b).text().toUpperCase();
+        return aText < bText ? -1 : aText > bText ? 1 : 0;
+    });
+
+    select.append(sortedOptions);
+    select.selectpicker('refresh');
+
+    // Additional configuration for another selectpicker
+    $('#weekSeletor').selectpicker({
+        actionsBox: true,
+    });
 
     // Initialize the select picker with custom options
     $('#workgroupsVibeDownload').selectpicker({
@@ -62,6 +79,11 @@ $(document).ready(function () {
         .catch(error => console.error('Error fetching CSV:', error));
     // Rest of your code...
 });
+
+$(document).ready(function() {
+
+});
+
 
 function createCsvTable(data) {
     // Assuming data is an array of objects where each object represents a row in the CSV
@@ -278,7 +300,7 @@ function populateSelectWithWorkgroups(workgroups) {
     }
 
     workgroups.forEach(wg => {
-        
+
         workgroupsSelect.append(new Option(wg, wg));
     });
 
@@ -295,7 +317,7 @@ $(document).ready(function () {
 
 // Initialize Switchery
 // Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Find the element
     var elem = document.querySelector('.loadSchedules');
 
@@ -449,16 +471,29 @@ function clearTableContent() {
     tbody.innerHTML = "";
 }
 
-document.getElementById('groupNPTbutton').addEventListener('click', function() {
-    // Step 1: Capture Form Inputs
-    let noOfLogins = document.getElementById('csaLoginGroupNPT').value.split('\n').length; // Assuming each login is on a new line
-    let duration = document.getElementById('duration').value; // This will be the slot length
-    let totalHours = calculateTotalHours(duration); // Function to calculate total hours
+document.addEventListener('DOMContentLoaded', function () {
+    const groupNPTButton = document.getElementById('groupNPTbutton');
+    const csaLoginGroupNPT = document.getElementById('csaLoginGroupNPT');
+    const durationElem = document.getElementById('duration');
+    const noOfLoginsElem = document.getElementById('noOfLogins');
+    const slotLengthDetailsElem = document.getElementById('SlotLengthDetails');
+    const totalHoursElem = document.getElementById('totalHours');
 
-    // Step 2: Update Table
-    document.getElementById('noOfLogins').innerText = noOfLogins;
-    document.getElementById('SlotLengthDetails').innerText = duration;
-    document.getElementById('totalHours').innerText = totalHours;
+    if (groupNPTButton && csaLoginGroupNPT && durationElem && noOfLoginsElem && slotLengthDetailsElem && totalHoursElem) {
+        groupNPTButton.addEventListener('click', function () {
+            // Step 1: Capture Form Inputs
+            let noOfLogins = csaLoginGroupNPT.value.split('\n').length; // Assuming each login is on a new line
+            let duration = durationElem.value; // This will be the slot length
+            let totalHours = calculateTotalHours(duration); // Function to calculate total hours
+
+            // Step 2: Update Table
+            noOfLoginsElem.innerText = noOfLogins;
+            slotLengthDetailsElem.innerText = duration;
+            totalHoursElem.innerText = totalHours;
+        });
+    } else {
+        console.log('One or more elements required for groupNPTbutton functionality are missing.');
+    }
 });
 
 function calculateTotalHours(duration) {
@@ -466,3 +501,18 @@ function calculateTotalHours(duration) {
     let [hours, minutes] = duration.split(':').map(Number);
     return hours + minutes / 60; // Converts total time to hours
 }
+
+
+
+const ws = new WebSocket('wss://127.0.0.1:5500'); // Replace 'your_port' with the actual port number
+
+function setFavicon() {
+    var link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }
+    link.href = 'data/favicon.ico';  // Update the path to your favicon
+}
+
